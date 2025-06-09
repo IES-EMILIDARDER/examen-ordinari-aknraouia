@@ -27,15 +27,12 @@ public class GestorExamen {
     GestorBBDD gestorBBDD = new GestorBBDD(MYSQL_CON);
 
     public void carregaDades()  throws SQLException, IOException {
+        
         carregaDepartment(this.departments);
         carregaEmployees(this.employees);
         carregadepartmentsXempleats(this.departmentsXemployees);
 
-        String sql = """
-                     SELECT email, first_name, last_name, e.department_id, department_name
-                     FROM departments d, employees e
-                     WHERE d.department_id = e.department_id
-                     """;
+       
         
     }      
     public void carregaDepartment(Set<Department> departments) throws SQLException, IOException {
@@ -107,7 +104,7 @@ public class GestorExamen {
     }
 
 
-    public void carregadepartmentsXempleats(Map<Department, List<Employee>> departmentsXemployees) throws SQLException, IOException {
+    public void carregadepartmentsXempleats(Map<Department, List<Employee>> departmentsXemployees ) throws SQLException, IOException {
         String sql = """
                      SELECT email, first_name, last_name, e.department_id, department_name
                      FROM departments d, employees e
@@ -130,6 +127,7 @@ public class GestorExamen {
             System.err.println("Error carregant departamentsXempleats BBDD: " + e.getMessage());
         }
     }
+    
     
     public void mostraDepartments(Set<Department> departments) {
        /* List<Department> listaDept = new ArrayList<> (departments);
@@ -158,7 +156,12 @@ public class GestorExamen {
     public void mostraDepartmentsXEmployees(Map<Department, List<Employee>> departmentsXemployees) {
         List<Department> listadepXemp = new ArrayList<> (departmentsXemployees.keySet());
         Collections.sort(listadepXemp);
+       
         for (Map.Entry<Department, List<Employee>> fact1 : departmentsXemployees.entrySet()) {
+            Department d = fact1.getKey();
+            List<Employee> e = fact1.getValue();
+            System.out.println("Clau:" + fact1.getKey() + "Valor :" + fact1.getValue());
+        
         System.out.println("DEPARTMENTS X EMPLOYEES");
         }
     } 
