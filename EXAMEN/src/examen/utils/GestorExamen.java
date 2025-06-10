@@ -26,6 +26,18 @@ public class GestorExamen {
     final String MYSQL_CON = "c:\\temp\\mysql.con";
     GestorBBDD gestorBBDD = new GestorBBDD(MYSQL_CON);
 
+    public Set<Department> getDepartments() {
+        return departments;
+    }
+
+    public Map<String, Employee> getEmployees() {
+        return employees;
+    }
+
+    public Map<Department, List<Employee>> getDepartmentsXemployees() {
+        return departmentsXemployees;
+    }
+    
     public void carregaDades()  throws SQLException, IOException {
         
         carregaDepartment(this.departments);
@@ -47,8 +59,8 @@ public class GestorExamen {
              ResultSet resultSet = gestorBBDD.executaQuerySQL(conn, sql) )  {
 
             while (resultSet.next()) {
-                agregaDepartment(departments, new Department(resultSet.getInt("departmentId"),
-                                                             resultSet.getString("name") ));
+                agregaDepartment(departments, new Department(resultSet.getInt("department_id"),  // CORRECCIO: cambiado el nombre de la columna
+                                                             resultSet.getString("department_name") ));  // CORRECCIO: cambiado el nombre de la columna
             }
 
         } catch (SQLException e) {
@@ -77,9 +89,9 @@ public class GestorExamen {
                 employee = employees.get(rs.getString("email"));
                 if( employee == null)
                     employee = new Employee (rs.getString("email"),
-                                            rs.getString("firstName"),
-                                            rs.getString("lastName"),
-                                            cercaDepartment (new Department(rs.getInt("departmentId"),null)));
+                                            rs.getString("first_name"),  // CORRECCIO: cambiado el nombre de la columna
+                                            rs.getString("last_name"),  // CORRECCIO: cambiado el nombre de la columna
+                                            cercaDepartment (new Department(rs.getInt("department_id"),null)));  // CORRECCIO: cambiado el nombre de la columna
                 
                 agregaEmployee(employees, employee);
             }
@@ -118,9 +130,9 @@ public class GestorExamen {
                
                 
                 Employee employee = new Employee(rs.getString("email"), 
-                                                 rs.getString("firstName"), 
-                                                 rs.getString("lastName"), 
-                                                 cercaDepartment (new Department(rs.getInt("departmentId"),rs.getString("name"))));
+                                                 rs.getString("first_name"),  // CORRECCIO: cambiado el nombre de la columna
+                                                 rs.getString("last_name"),  // CORRECCIO: cambiado el nombre de la columna 
+                                                 cercaDepartment (new Department(rs.getInt("department_id"),rs.getString("department_name"))));  // CORRECCIO: cambiado el nombre de la columna
             }
             
         } catch (SQLException e) {
@@ -145,8 +157,8 @@ public class GestorExamen {
         }*/
         
         employees.entrySet().stream()
-                .sorted() 
-                .forEach(entry -> { String key = entry.getKey();
+                //.sorted()  // CORRECCIO: cuidado, este 'sorted' ordena el 'entrySet' no los employees ... 
+                .forEach(entry -> { String key = entry.getKey();  
                     Employee e = entry.getValue();
                     System.out.println("Employees :" + key + e.getEmail());
                 });
@@ -169,7 +181,9 @@ public class GestorExamen {
     public void desaDepartmentsXEmpleatsCSV(String path) throws IOException {
         try (BufferedWriter br = Files.newBufferedWriter(Paths.get(path))) {
            
-            
+            // CORRECCIO: el orden de los atributos del CSV es al revés de lo que haces ...
+            // lo comento para poder ejecutar el programa
+            /*
             for( Employee e : employees.values()) {
                 String text = e.getEmail() + "," + e.getFirstName() + "," + e.getLastName() + ",";
                 for (Department d : e.getDepartment()) {
@@ -178,6 +192,8 @@ public class GestorExamen {
                     br.newLine();
                 }
             } 
+            */
+
             
         } catch (IOException | NumberFormatException e) {
           System.err.println("Error descarregant vendes CSV: " + e.getMessage());

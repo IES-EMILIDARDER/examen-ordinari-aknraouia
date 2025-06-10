@@ -9,9 +9,9 @@ public class Main {
         try {
             gestor.carregaDades();
 
-            gestor.mostraDepartments();
-            gestor.mostraEmployees();
-            gestor.mostraDepartmentsXEmployees();
+            gestor.mostraDepartments(gestor.getDepartments() ); // CORRECCIÓ: faltaba a?adir el paràmetro
+            gestor.mostraEmployees(gestor.getEmployees()); // CORRECCIÓ: faltaba a?adir el paràmetro
+            gestor.mostraDepartmentsXEmployees(gestor.getDepartmentsXemployees()); // CORRECCIÓ: faltaba a?adir el paràmetro
             
             gestor.desaDepartmentsXEmpleatsCSV("c:\\temp\\departmentXEmpleats.cvs");
 
